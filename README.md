@@ -3,7 +3,7 @@
 ## Сначало надо скачать
 
 ```
-git git@github.com:maksvorobev/for_yadro.git
+git clone git@github.com:maksvorobev/for_yadro.git
 ```
 
 ## Запуск проекта
@@ -15,3 +15,5 @@ cmake .. && make
 ./a.out ./../test_file.txt
 
 ```
+
+к сожалению я не знаю как написать тесты для программы  на c++ которая выводит в данные в косоль
