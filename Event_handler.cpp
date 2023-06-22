@@ -10,10 +10,7 @@ Event_handler::Event_handler(const std::string& filename){
     Time open = Time(std::stoi(sp.split(events[1][0], ':')[0]), std::stoi(sp.split(events[1][0], ':')[1]));
     Time end = Time(std::stoi(sp.split(events[1][1], ':')[0]), std::stoi(sp.split(events[1][1], ':')[1]));
     this->time_end = end;
-    std::cout << open.hours << ' ' << open.minutes << std::endl;
-    //
-    //std::cout <<"hourly_cost = " <<  std::stoi(events[2][0]) << '\n';
-    //
+    std::printf("%02d:%02d\n", open.hours, open.minutes);
     club = Game_club(static_cast<int>(std::stoi(events[0][0])), open, end, std::stoi(events[2][0]));
     start_processing();
     end_of_working_day();
@@ -23,11 +20,7 @@ Event_handler::Event_handler(const std::string& filename){
 void Event_handler::start_processing(){
 
     for (int i = 3; i < events.size(); ++i){
-        /*
-        if (stoi(events[i][1]) == EVENT::CLIENT_CAME){
-            std::cout << "1ev"<< '\n';
-        }
-        */
+
        Split_string_by_character sp;
         switch(stoi(events[i][1])){
             case INPUT_EVENT::CLIENT_CAME:
@@ -35,8 +28,8 @@ void Event_handler::start_processing(){
                 int h =  stoi(sp.split(events[i][0], ':')[0]);
                 int m = stoi(sp.split(events[i][0], ':')[1]);
                 std::string name = events[i][2];
-                std::cout << h << ':' << m << ' '
-                << 1 << ' ' << name << '\n';
+                std::printf("%02d:%02d %d %s\n", h, m, 1, name.c_str());
+        
                 if (club.does_the_user_exist(events[i][2]) == true){
                     error(Time(h, m), "YouShallNotPass");
                 }
@@ -56,8 +49,8 @@ void Event_handler::start_processing(){
                 int m = stoi(sp.split(events[i][0], ':')[1]);
                 int table_number = stoi(events[i][3]);
                 std::string name = events[i][2];
-                std::cout << h << ':' << m << ' '
-                << 2 << ' ' << name << ' ' << table_number <<  '\n';
+                std::printf("%02d:%02d %d %s %d\n", h, m, 2, name.c_str(), table_number);
+         
                 if (club.does_the_user_exist(events[i][2]) == false){
                     error(Time(h, m), "ClientUnknown");
                 }
@@ -76,10 +69,9 @@ void Event_handler::start_processing(){
                     int h =  stoi(sp.split(events[i][0], ':')[0]);
                     int m = stoi(sp.split(events[i][0], ':')[1]);
                     std::string name = events[i][2];
-                    std::cout << h << ':' << m << ' '
-                    << 3 << ' ' << name << ' ' <<  '\n';
+                    std::printf("%02d:%02d %d %s\n", h, m, 3, name.c_str());
                     if (club.is_there_a_free_table() == true){
-                        error(Time(h, m), "ICanWaitNoLOnger!");
+                        error(Time(h, m), "ICanWaitNoLonger!");
                     }
                     else if (club.get_user_queue().size() > club.get_number_of_visitors()){
                         client_left(Time(h, m), name);
@@ -94,9 +86,9 @@ void Event_handler::start_processing(){
                 {
                     int h =  stoi(sp.split(events[i][0], ':')[0]);
                     int m = stoi(sp.split(events[i][0], ':')[1]);
-                    std::string name = events[i][2];\
-                    std::cout << h << ':' << m << ' '
-                    << 4 << ' ' << name << ' ' <<  '\n';
+                    std::string name = events[i][2];
+                     std::printf("%02d:%02d %d %s\n", h, m, 4, name.c_str());
+            
                     if (club.does_the_user_exist(events[i][2]) == false){
                         error(Time(h, m), "ClientUnknown");
                     }
@@ -108,6 +100,7 @@ void Event_handler::start_processing(){
                         else{
                             club.get_Table_by_index(table_number).client_leaves_the_table(Time(h, m));
                             client_sat_at_the_table(Time(h, m), table_number);
+                            club.client_left_from_club(name);
                             
                         }
                     }
@@ -122,15 +115,15 @@ void Event_handler::start_processing(){
 
 
 void Event_handler::error(Time erroe_time, std::string error_name){
-    std::cout << erroe_time.hours << ':' << erroe_time.minutes << ' '
-    << 13 << ' ' << error_name << '\n';
+    std::printf("%02d:%02d %d %s\n", erroe_time.hours,
+        erroe_time.minutes, 13, error_name.c_str());
 }
 
 
 
 void Event_handler::client_left(Time erroe_time, std::string client_name){
-    std::cout << erroe_time.hours << ':' << erroe_time.minutes << ' '
-    << 11 << ' ' << client_name << '\n'; 
+    std::printf("%02d:%02d %d %s\n", erroe_time.hours,
+        erroe_time.minutes, 11, client_name.c_str());
 }   
 
 
@@ -143,8 +136,8 @@ void Event_handler::client_sat_at_the_table(Time time, int table_number){
         Client cl = club.get_user_queue().front();
         club.get_user_queue().pop();
         club.get_Table_by_index(table_number).land_a_client(cl, time);
-        std::cout << time.hours << ':' << time.minutes << ' '
-    << 12 << ' ' << cl.get_name() << ' ' << table_number <<  '\n'; 
+        std::printf("%02d:%02d %d %s %d\n", time.hours,
+        time.minutes, 12, cl.get_name().c_str(), table_number);
     }
 }
 
@@ -153,9 +146,10 @@ void Event_handler::client_sat_at_the_table(Time time, int table_number){
 void Event_handler::end_of_working_day(){
     auto remaining_in_end = club.list_left_at_the_end_of_the_day();
     for (auto& x : remaining_in_end){
-        std::cout << time_end.hours << ':' << time_end.minutes << ' '
-    << 11 << ' ' << x << '\n'; 
+        std::printf("%02d:%02d %d %s\n", time_end.hours,
+        time_end.minutes, 11, x.c_str());
     }
-    std::cout << time_end.hours << ':' << time_end.minutes << '\n';
+    std::printf("%02d:%02d \n", time_end.hours,
+        time_end.minutes );
     club.withdraw_salary();
 }

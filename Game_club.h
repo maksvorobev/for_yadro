@@ -8,6 +8,7 @@
 #include <memory>
 #include <queue>
 #include <algorithm>
+#include <stdio.h>
 
 class Game_club{
     int number_of_visitors;
@@ -32,4 +33,5 @@ public:
     int find_where_client_is_sitting_by_name(std::string client_name);
     std::vector<std::string> list_left_at_the_end_of_the_day();
     void withdraw_salary();
+    void client_left_from_club(std::string name);
 };

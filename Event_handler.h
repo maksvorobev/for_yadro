@@ -4,6 +4,7 @@
 #include "Split_string_by_character.h"
 #include <iostream>
 #include <stdexcept>
+#include <stdio.h>
 
 
 class Event_handler{
@@ -24,7 +25,6 @@ class Event_handler{
 
     void end_of_working_day();
 public:
-    //Event_handler() = default;
     Event_handler(const std::string& filename);
     void start_processing();
 

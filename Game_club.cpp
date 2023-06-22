@@ -74,7 +74,12 @@ std::vector<std::string> Game_club::list_left_at_the_end_of_the_day(){
 
 void Game_club::withdraw_salary(){
     for (auto& [l, r] : mp_tables){
-        std::cout << l << ' ' << r.get_salary() << ' ' << r.get_total_work_time().hours <<
-        ':' << r.get_total_work_time().minutes << '\n';
+        std::cout << l << ' ' << r.get_salary() << ' '; 
+        std::printf("%02d:%02d \n", r.get_total_work_time().hours,
+        r.get_total_work_time().minutes );
     }
+}
+
+void Game_club::client_left_from_club(std::string name){
+    mp_users.erase(name);
 }
