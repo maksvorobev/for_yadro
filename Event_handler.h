@@ -27,5 +27,11 @@ class Event_handler{
 public:
     Event_handler(const std::string& filename);
     void start_processing();
-
+    void check_correct_name(std::string& name);
+    void check_correct_date(std::string& date);
+    void check_correct_table_number(int number);
+    void check_CLIENT_CAME_input(std::string& date, std::string& name);
+    void check_CLIENT_SAT_AT_THE_TABLE_input(std::string& date, std::string& name, int number);
+    void check_CIENT_IS_WAITING_input(std::string& date, std::string& name);
+    void check_CLIENT_LEFT_input(std::string& date, std::string& name);
 };

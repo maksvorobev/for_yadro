@@ -28,6 +28,7 @@ void Event_handler::start_processing(){
                 int h =  stoi(sp.split(events[i][0], ':')[0]);
                 int m = stoi(sp.split(events[i][0], ':')[1]);
                 std::string name = events[i][2];
+                check_CLIENT_CAME_input(events[i][0], name);
                 std::printf("%02d:%02d %d %s\n", h, m, 1, name.c_str());
         
                 if (club.does_the_user_exist(events[i][2]) == true){
@@ -45,10 +46,12 @@ void Event_handler::start_processing(){
             }
             case INPUT_EVENT::CLIENT_SAT_AT_THE_TABLE:
             {
+
                 int h =  stoi(sp.split(events[i][0], ':')[0]);
                 int m = stoi(sp.split(events[i][0], ':')[1]);
                 int table_number = stoi(events[i][3]);
                 std::string name = events[i][2];
+                check_CLIENT_SAT_AT_THE_TABLE_input(events[i][0], name, table_number);
                 std::printf("%02d:%02d %d %s %d\n", h, m, 2, name.c_str(), table_number);
          
                 if (club.does_the_user_exist(events[i][2]) == false){
@@ -69,6 +72,7 @@ void Event_handler::start_processing(){
                     int h =  stoi(sp.split(events[i][0], ':')[0]);
                     int m = stoi(sp.split(events[i][0], ':')[1]);
                     std::string name = events[i][2];
+                    check_CIENT_IS_WAITING_input(events[i][0], name);
                     std::printf("%02d:%02d %d %s\n", h, m, 3, name.c_str());
                     if (club.is_there_a_free_table() == true){
                         error(Time(h, m), "ICanWaitNoLonger!");
@@ -87,6 +91,7 @@ void Event_handler::start_processing(){
                     int h =  stoi(sp.split(events[i][0], ':')[0]);
                     int m = stoi(sp.split(events[i][0], ':')[1]);
                     std::string name = events[i][2];
+                    check_CLIENT_LEFT_input(events[i][0], name);
                      std::printf("%02d:%02d %d %s\n", h, m, 4, name.c_str());
             
                     if (club.does_the_user_exist(events[i][2]) == false){
@@ -153,3 +158,62 @@ void Event_handler::end_of_working_day(){
         time_end.minutes );
     club.withdraw_salary();
 }
+
+
+void Event_handler::check_correct_name(std::string& name){
+    for (auto x : name){
+        if (!((97 <= x and x <= 122) or ( x >= 48 and x <= 57))){
+            
+            throw std::runtime_error("incorrect input(name)!!!");
+        }
+    }
+}
+
+void Event_handler::check_correct_date(std::string& date){
+    Split_string_by_character sp;
+    auto h_str =  sp.split(date, ':')[0];
+    auto m_str = sp.split(date, ':')[1];
+    int h =  stoi(sp.split(date, ':')[0]);
+    int m = stoi(sp.split(date, ':')[1]);
+    if (!(h >= 0 and h <=23)){
+        throw std::runtime_error("incorrect input(date)!!!");
+    }
+    else if (h_str.size() != 2 or m_str.size() != 2){
+        throw std::runtime_error("incorrect input(date)!!!");
+    }
+    else if (!(m >= 0 and m <= 60)){
+        throw std::runtime_error("incorrect input(date)!!!");
+    }
+}
+
+
+void Event_handler::check_correct_table_number(int number){
+    if (!(number >= 1 and number <= club.get_number_of_visitors())){
+        throw std::runtime_error("incorrect input(number of table)!!!");
+    }
+}
+
+
+void Event_handler::check_CLIENT_CAME_input(std::string& date, std::string& name){
+    check_correct_name(name);
+    check_correct_date(date);
+}
+
+void Event_handler::check_CLIENT_SAT_AT_THE_TABLE_input(std::string& date, std::string& name, int number){
+    check_correct_name(name);
+    check_correct_date(date);
+    check_correct_table_number(number);
+
+}
+
+void Event_handler::check_CIENT_IS_WAITING_input(std::string& date, std::string& name){
+    check_correct_name(name);
+    check_correct_date(date);
+}
+
+
+void Event_handler::check_CLIENT_LEFT_input(std::string& date, std::string& name){
+    check_correct_name(name);
+    check_correct_date(date);
+}
+
